@@ -1,7 +1,7 @@
 local M = {}
 
-if vim.fn.has "nvim-0.10" ~= 1 then
-  vim.notify("Please upgrade your Neovim base installation. Lunarvim requires v0.10+", vim.log.levels.WARN)
+if vim.fn.has "nvim-0.11" ~= 1 then
+  vim.notify("Please upgrade your Neovim base installation. SolarVim requires v0.11+", vim.log.levels.WARN)
   vim.wait(5000, function()
     ---@diagnostic disable-next-line: redundant-return-value
     return false
@@ -9,7 +9,7 @@ if vim.fn.has "nvim-0.10" ~= 1 then
   vim.cmd "cquit"
 end
 
-local uv = vim.loop
+local uv = vim.uv
 local path_sep = uv.os_uname().version:match "Windows" and "\\" or "/"
 
 ---Join path segments that were passed as input
