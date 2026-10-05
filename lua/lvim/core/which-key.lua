@@ -237,28 +237,28 @@ M.config = function()
         e = { "<cmd>Telescope quickfix<cr>", "Telescope Quickfix" },
       },
       L = {
-        name = "+LunarVim",
+        name = "+SolarVim",
         c = {
           "<cmd>edit " .. get_config_dir() .. "/config.lua<cr>",
           "Edit config.lua",
         },
-        d = { "<cmd>LvimDocs<cr>", "View LunarVim's docs" },
+        d = { "<cmd>LvimDocs<cr>", "View SolarVim's docs" },
         f = {
           "<cmd>lua require('lvim.core.telescope.custom-finders').find_lunarvim_files()<cr>",
-          "Find LunarVim files",
+          "Find SolarVim files",
         },
         g = {
           "<cmd>lua require('lvim.core.telescope.custom-finders').grep_lunarvim_files()<cr>",
-          "Grep LunarVim files",
+          "Grep SolarVim files",
         },
-        k = { "<cmd>Telescope keymaps<cr>", "View LunarVim's keymappings" },
+        k = { "<cmd>Telescope keymaps<cr>", "View SolarVim's keymappings" },
         i = {
           "<cmd>lua require('lvim.core.info').toggle_popup(vim.bo.filetype)<cr>",
-          "Toggle LunarVim Info",
+          "Toggle SolarVim Info",
         },
         I = {
           "<cmd>lua require('lvim.core.telescope.custom-finders').view_lunarvim_changelog()<cr>",
-          "View LunarVim's changelog",
+          "View SolarVim's changelog",
         },
         l = {
           name = "+logs",
@@ -281,8 +281,8 @@ M.config = function()
           },
           N = { "<cmd>edit $NVIM_LOG_FILE<cr>", "Open the Neovim logfile" },
         },
-        r = { "<cmd>LvimReload<cr>", "Reload LunarVim's configuration" },
-        u = { "<cmd>LvimUpdate<cr>", "Update LunarVim" },
+        r = { "<cmd>LvimReload<cr>", "Reload SolarVim's configuration" },
+        u = { "<cmd>LvimUpdate<cr>", "Update SolarVim" },
       },
       s = {
         name = "Search",
@@ -314,16 +314,33 @@ end
 M.setup = function()
   local which_key = require "which-key"
 
-  which_key.setup(lvim.builtin.which_key.setup)
+  -- translate the legacy (which-key v2) setup options to the v3 API;
+  -- options without a v3 equivalent are intentionally dropped
+  local legacy_setup = lvim.builtin.which_key.setup or {}
+  local window = legacy_setup.window or {}
+  which_key.setup {
+    win = {
+      border = window.border,
+      padding = window.padding,
+      winblend = window.winblend,
+    },
+  }
 
-  local opts = lvim.builtin.which_key.opts
-  local vopts = lvim.builtin.which_key.vopts
+  -- register() is deprecated in which-key v3; keep accepting the legacy
+  -- mapping tables (lvim.builtin.which_key.[v]mappings) via the v1 spec path
+  local function register_legacy(mappings, opts)
+    if not mappings then
+      return
+    end
+    local spec = vim.deepcopy(mappings)
+    for k, v in pairs(opts or {}) do
+      spec[k] = v
+    end
+    which_key.add(spec, { version = 1 })
+  end
 
-  local mappings = lvim.builtin.which_key.mappings
-  local vmappings = lvim.builtin.which_key.vmappings
-
-  which_key.register(mappings, opts)
-  which_key.register(vmappings, vopts)
+  register_legacy(lvim.builtin.which_key.mappings, lvim.builtin.which_key.opts)
+  register_legacy(lvim.builtin.which_key.vmappings, lvim.builtin.which_key.vopts)
 
   if lvim.builtin.which_key.on_config_done then
     lvim.builtin.which_key.on_config_done(which_key)
