@@ -15,7 +15,7 @@ function M.find_lunarvim_files(opts)
     sorting_strategy = "ascending",
     layout_strategy = "bottom_pane",
     prompt_prefix = ">> ",
-    prompt_title = "~ LunarVim files ~",
+    prompt_title = "~ SolarVim files ~",
     cwd = get_runtime_dir(),
     search_dirs = { get_lvim_base_dir(), lvim.lsp.templates_dir },
   }
@@ -29,7 +29,7 @@ function M.grep_lunarvim_files(opts)
     sorting_strategy = "ascending",
     layout_strategy = "bottom_pane",
     prompt_prefix = ">> ",
-    prompt_title = "~ search LunarVim ~",
+    prompt_title = "~ search SolarVim ~",
     cwd = get_runtime_dir(),
     search_dirs = { get_lvim_base_dir(), lvim.lsp.templates_dir },
   }
@@ -55,7 +55,7 @@ function M.view_lunarvim_changelog()
 
   pickers
     .new(opts, {
-      prompt_title = "~ LunarVim Changelog ~",
+      prompt_title = "~ SolarVim Changelog ~",
 
       finder = finders.new_oneshot_job(
         vim.iter({ "git", "log", "--pretty=oneline", "--abbrev-commit" }):totable(),

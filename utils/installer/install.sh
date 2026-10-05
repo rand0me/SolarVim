@@ -5,16 +5,16 @@ OS="$(uname -s)"
 
 #Set branch to master unless specified by the user
 declare -x LV_BRANCH="${LV_BRANCH:-"master"}"
-declare -xr LV_REMOTE="${LV_REMOTE:-lunarvim/lunarvim.git}"
+declare -xr LV_REMOTE="${LV_REMOTE:-rand0me/SolarVim.git}"
 declare -xr INSTALL_PREFIX="${INSTALL_PREFIX:-"$HOME/.local"}"
 
 declare -xr XDG_DATA_HOME="${XDG_DATA_HOME:-"$HOME/.local/share"}"
 declare -xr XDG_CACHE_HOME="${XDG_CACHE_HOME:-"$HOME/.cache"}"
 declare -xr XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-"$HOME/.config"}"
 
-declare -xr NVIM_APPNAME="${NVIM_APPNAME:-"lvim"}"
+declare -xr NVIM_APPNAME="${NVIM_APPNAME:-"solarvim"}"
 
-declare -xr LUNARVIM_RUNTIME_DIR="${LUNARVIM_RUNTIME_DIR:-"$XDG_DATA_HOME/lunarvim"}"
+declare -xr LUNARVIM_RUNTIME_DIR="${LUNARVIM_RUNTIME_DIR:-"$XDG_DATA_HOME/solarvim"}"
 declare -xr LUNARVIM_CONFIG_DIR="${LUNARVIM_CONFIG_DIR:-"$XDG_CONFIG_HOME/$NVIM_APPNAME"}"
 declare -xr LUNARVIM_CACHE_DIR="${LUNARVIM_CACHE_DIR:-"$XDG_CACHE_HOME/$NVIM_APPNAME"}"
 declare -xr LUNARVIM_BASE_DIR="${LUNARVIM_BASE_DIR:-"$LUNARVIM_RUNTIME_DIR/$NVIM_APPNAME"}"
@@ -56,9 +56,9 @@ function usage() {
   echo ""
   echo "Options:"
   echo "    -h, --help                               Print this help message"
-  echo "    -l, --local                              Install local copy of LunarVim"
+  echo "    -l, --local                              Install local copy of SolarVim"
   echo "    -y, --yes                                Disable confirmation prompts (answer yes to all questions)"
-  echo "    --overwrite                              Overwrite previous LunarVim configuration (a backup is always performed first)"
+  echo "    --overwrite                              Overwrite previous SolarVim configuration (a backup is always performed first)"
   echo "    --[no-]install-dependencies              Whether to automatically install external dependencies (will prompt by default)"
 }
 
@@ -131,10 +131,10 @@ function main() {
 
   if [ "$ARGS_INSTALL_DEPENDENCIES" -eq 1 ]; then
     if [ "$INTERACTIVE_MODE" -eq 1 ]; then
-      if confirm "Would you like to install LunarVim's NodeJS/BunJS dependencies: $(stringify_array "${__npm_deps[@]}")?"; then
+      if confirm "Would you like to install SolarVim's NodeJS/BunJS dependencies: $(stringify_array "${__npm_deps[@]}")?"; then
         install_nodejs_deps
       fi
-      if confirm "Would you like to install LunarVim's Rust dependencies: $(stringify_array "${__rust_deps[@]}")?"; then
+      if confirm "Would you like to install SolarVim's Rust dependencies: $(stringify_array "${__rust_deps[@]}")?"; then
         install_rust_deps
       fi
     else
@@ -156,7 +156,7 @@ function main() {
   setup_lvim
 
   msg "$ADDITIONAL_WARNINGS"
-  msg "Thank you for installing LunarVim!!"
+  msg "Thank you for installing SolarVim!!"
   echo "You can start it by running: $INSTALL_PREFIX/bin/$NVIM_APPNAME"
   echo "Do not forget to use a font with glyphs (icons) support [https://github.com/ryanoasis/nerd-fonts]"
 }
@@ -206,11 +206,11 @@ function print_missing_dep_msg() {
 }
 
 function check_neovim_min_version() {
-  local verify_version_cmd='if !has("nvim-0.9") | cquit | else | quit | endif'
+  local verify_version_cmd='if !has("nvim-0.11") | cquit | else | quit | endif'
 
   # exit with an error if min_version not found
   if ! nvim --headless -u NONE -c "$verify_version_cmd"; then
-    echo "[ERROR]: LunarVim requires at least Neovim v0.9 or higher"
+    echo "[ERROR]: SolarVim requires at least Neovim v0.11 or higher"
     exit 1
   fi
 }
@@ -252,6 +252,23 @@ function check_system_deps() {
     exit 1
   fi
   check_neovim_min_version
+  check_tree_sitter_cli
+}
+
+# nvim-treesitter (main branch) builds parsers with the tree-sitter CLI
+function check_tree_sitter_cli() {
+  if command -v tree-sitter &>/dev/null; then
+    local version
+    version=$(tree-sitter --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+')
+    if [ "$(printf '%s\n0.26\n' "$version" | sort -V | head -n1)" = "0.26" ]; then
+      return 0
+    fi
+    echo "[WARN]: tree-sitter CLI $(tree-sitter --version 2>/dev/null) is too old, nvim-treesitter requires >= 0.26.1."
+    echo "Syntax highlighting for newly installed parsers will fail until it is upgraded."
+  else
+    echo "[WARN]: tree-sitter CLI not found. nvim-treesitter requires it (>= 0.26.1) to install parsers."
+    echo "Install it with: $RECOMMEND_INSTALL tree-sitter"
+  fi
 }
 
 function __install_nodejs_deps_pnpm() {
@@ -376,7 +393,7 @@ function verify_lvim_dirs() {
 }
 
 function clone_lvim() {
-  msg "Cloning LunarVim configuration"
+  msg "Cloning SolarVim configuration"
   if ! git clone --progress --depth 1 --branch "$LV_BRANCH" \
     "https://github.com/${LV_REMOTE}" "$LUNARVIM_BASE_DIR"; then
     echo "Failed to clone repository. Installation failed."
@@ -385,7 +402,7 @@ function clone_lvim() {
 }
 
 function link_local_lvim() {
-  echo "Linking local LunarVim repo"
+  echo "Linking local SolarVim repo"
 
   # Detect whether it's a symlink or a folder
   if [ -d "$LUNARVIM_BASE_DIR" ]; then
@@ -411,7 +428,7 @@ function remove_old_cache_files() {
 
 function setup_lvim() {
 
-  msg "Installing LunarVim shim"
+  msg "Installing SolarVim shim"
 
   setup_shim
 

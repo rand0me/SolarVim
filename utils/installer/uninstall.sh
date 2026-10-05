@@ -10,7 +10,7 @@ declare -r XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-"$HOME/.config"}"
 
 declare -xr NVIM_APPNAME="${NVIM_APPNAME:-"lvim"}"
 
-declare -xr LUNARVIM_RUNTIME_DIR="${LUNARVIM_RUNTIME_DIR:-"$XDG_DATA_HOME/lunarvim"}"
+declare -xr LUNARVIM_RUNTIME_DIR="${LUNARVIM_RUNTIME_DIR:-"$XDG_DATA_HOME/solarvim"}"
 declare -xr LUNARVIM_CONFIG_DIR="${LUNARVIM_CONFIG_DIR:-"$XDG_CONFIG_HOME/$NVIM_APPNAME"}"
 declare -xr LUNARVIM_CACHE_DIR="${LUNARVIM_CACHE_DIR:-"$XDG_CACHE_HOME/$NVIM_APPNAME"}"
 declare -xr LUNARVIM_BASE_DIR="${LUNARVIM_BASE_DIR:-"$LUNARVIM_RUNTIME_DIR/$NVIM_APPNAME"}"
@@ -78,12 +78,12 @@ function remove_desktop_file() {
 
 function main() {
   parse_arguments "$@"
-  echo "Removing LunarVim binary..."
+  echo "Removing SolarVim binary..."
   remove_lvim_bin
-  echo "Removing LunarVim directories..."
+  echo "Removing SolarVim directories..."
   remove_lvim_dirs
   remove_desktop_file
-  echo "Uninstalled LunarVim!"
+  echo "Uninstalled SolarVim!"
 }
 
 main "$@"
