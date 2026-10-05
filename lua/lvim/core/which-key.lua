@@ -318,29 +318,79 @@ M.setup = function()
   -- options without a v3 equivalent are intentionally dropped
   local legacy_setup = lvim.builtin.which_key.setup or {}
   local window = legacy_setup.window or {}
+
+  -- translate a legacy mapping table + opts into the v3 list spec, so
+  -- which-key never sees the deprecated v1 spec (no health warnings) and we
+  -- don't depend on wk.add()'s queue, which nothing drains post-setup
+  local function legacy_to_v3(mappings, opts)
+    local defaults = {
+      mode = (opts and opts.mode) or "n",
+      -- legacy defaults: noremap = true, nowait = true
+      remap = not (opts and opts.noremap ~= false),
+      nowait = not (opts and opts.nowait == false),
+    }
+    if opts and opts.buffer ~= nil then
+      defaults.buffer = opts.buffer
+    end
+    -- legacy `silent` is v3's only behavior, so it has no equivalent
+
+    local spec = {}
+
+    local function convert(prefix, tbl)
+      if tbl.name then
+        -- legacy group names carry a "+" prefix; v3 group labels drop it
+        local group = vim.tbl_extend("force", { prefix, group = tbl.name:gsub("^%+", "") }, defaults)
+        table.insert(spec, group)
+      end
+      for key, val in pairs(tbl) do
+        if key ~= "name" then
+          if type(val) == "table" and val[1] ~= nil then
+            local entry = vim.tbl_extend("force", { prefix .. key, val[1] }, defaults)
+            if val[2] then
+              entry.desc = val[2]
+            end
+            for opt, v in pairs(val) do
+              if type(opt) == "string" and opt ~= "silent" then
+                if opt == "noremap" then
+                  entry.remap = not v
+                else
+                  entry[opt] = v
+                end
+              end
+            end
+            table.insert(spec, entry)
+          elseif type(val) == "table" then
+            convert(prefix .. key, val)
+          elseif type(val) == "string" or type(val) == "function" then
+            table.insert(spec, vim.tbl_extend("force", { prefix .. key, val }, defaults))
+          end
+        end
+      end
+    end
+
+    convert((opts and opts.prefix) or "", mappings)
+    return spec
+  end
+
+  local spec = {}
+  local function register_legacy(mappings, opts)
+    if not mappings then
+      return
+    end
+    vim.list_extend(spec, legacy_to_v3(mappings, opts))
+  end
+
+  register_legacy(lvim.builtin.which_key.mappings, lvim.builtin.which_key.opts)
+  register_legacy(lvim.builtin.which_key.vmappings, lvim.builtin.which_key.vopts)
+
   which_key.setup {
     win = {
       border = window.border,
       padding = window.padding,
       winblend = window.winblend,
     },
+    spec = spec,
   }
-
-  -- register() is deprecated in which-key v3; keep accepting the legacy
-  -- mapping tables (lvim.builtin.which_key.[v]mappings) via the v1 spec path
-  local function register_legacy(mappings, opts)
-    if not mappings then
-      return
-    end
-    local spec = vim.deepcopy(mappings)
-    for k, v in pairs(opts or {}) do
-      spec[k] = v
-    end
-    which_key.add(spec, { version = 1 })
-  end
-
-  register_legacy(lvim.builtin.which_key.mappings, lvim.builtin.which_key.opts)
-  register_legacy(lvim.builtin.which_key.vmappings, lvim.builtin.which_key.vopts)
 
   if lvim.builtin.which_key.on_config_done then
     lvim.builtin.which_key.on_config_done(which_key)
