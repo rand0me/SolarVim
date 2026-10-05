@@ -128,11 +128,11 @@ local core_plugins = {
   -- Treesitter
   {
     "nvim-treesitter/nvim-treesitter",
-    -- run = ":TSUpdate",
+    -- the `main` branch is an incompatible rewrite requiring Neovim 0.12+
+    branch = "main",
+    lazy = false, -- nvim-treesitter main does not support lazy-loading
+    build = ":TSUpdate",
     config = function()
-      local utils = require "lvim.utils"
-      local path = utils.join_paths(get_runtime_dir(), "site", "pack", "lazy", "opt", "nvim-treesitter")
-      vim.opt.rtp:prepend(path) -- treesitter needs to be before nvim's runtime in rtp
       require("lvim.core.treesitter").setup()
     end,
     cmd = {
@@ -144,7 +144,6 @@ local core_plugins = {
       "TSInstallSync",
       "TSInstallFromGrammar",
     },
-    event = "User FileOpened",
   },
   {
     -- Lazy loaded by Comment.nvim pre_hook
@@ -354,7 +353,6 @@ local core_plugins = {
       end)
     end,
     enabled = lvim.builtin.bigfile.active,
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
     event = { "FileReadPre", "BufReadPre", "User FileOpened" },
   },
 }

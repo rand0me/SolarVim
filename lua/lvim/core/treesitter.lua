@@ -5,7 +5,7 @@ function M.config()
   lvim.builtin.treesitter = {
     on_config_done = nil,
 
-    -- A list of parser names, or "all"
+    -- A list of parser names to install
     ensure_installed = { "comment", "markdown_inline", "regex" },
 
     -- List of parsers to ignore installing (for "all")
@@ -96,40 +96,66 @@ function M.config()
 end
 
 function M.setup()
-  -- avoid running in headless mode since it's harder to detect failures
-  if #vim.api.nvim_list_uis() == 0 then
-    Log:debug "headless mode detected, skipping running setup for treesitter"
-    return
-  end
-
-  local ts_status_ok, treesitter_configs = pcall(require, "nvim-treesitter.configs")
+  local ts_status_ok, ts = pcall(require, "nvim-treesitter")
   if not ts_status_ok then
-    Log:error "Failed to load nvim-treesitter.configs"
-    return
-  end
-
-  local status_ok, ts_context_commentstring = pcall(require, "ts_context_commentstring")
-  if not status_ok then
-    Log:error "Failed to load ts_context_commentstring"
+    Log:error "Failed to load nvim-treesitter"
     return
   end
 
   local opts = vim.deepcopy(lvim.builtin.treesitter)
 
   -- handle deprecated API, https://github.com/JoosepAlviste/nvim-ts-context-commentstring/issues/82
-  ts_context_commentstring.setup(opts.context_commentstring)
-  opts.context_commentstring = nil
-
-  treesitter_configs.setup(opts)
-
-  if lvim.builtin.treesitter.on_config_done then
-    lvim.builtin.treesitter.on_config_done(treesitter_configs)
+  local ts_context_ok, ts_context_commentstring = pcall(require, "ts_context_commentstring")
+  if ts_context_ok then
+    ts_context_commentstring.setup(opts.context_commentstring)
   end
 
-  -- handle deprecated API, https://github.com/windwp/nvim-autopairs/pull/324
-  local ts_utils = require "nvim-treesitter.ts_utils"
-  ts_utils.is_in_node_range = vim.treesitter.is_in_node_range
-  ts_utils.get_node_range = vim.treesitter.get_node_range
+  ts.setup {
+    install_dir = opts.parser_install_dir,
+  }
+
+  if opts.ensure_installed and #opts.ensure_installed > 0 then
+    local install = ts.install(opts.ensure_installed)
+    if opts.sync_install and install then
+      install:wait(300000)
+    end
+  end
+
+  -- nvim-treesitter `main` no longer ships the `configs` module:
+  -- highlighting and indentation are Neovim builtins that we enable per filetype
+  vim.api.nvim_create_augroup("_lvim_treesitter", { clear = true })
+  vim.api.nvim_create_autocmd("FileType", {
+    group = "_lvim_treesitter",
+    callback = function(args)
+      local lang = vim.treesitter.language.get_lang(args.match) or args.match
+
+      if opts.highlight and opts.highlight.enable then
+        local disabled = type(opts.highlight.disable) == "function" and opts.highlight.disable(lang, args.buf)
+        if not disabled then
+          pcall(vim.treesitter.start, args.buf)
+        end
+      end
+
+      if
+        opts.indent
+        and opts.indent.enable
+        and not vim.tbl_contains(opts.indent.disable or {}, lang)
+      then
+        vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+      end
+
+      if
+        opts.auto_install
+        and #vim.api.nvim_get_runtime_file(("parser/%s.*"):format(lang), false) == 0
+      then
+        pcall(ts.install, { lang })
+      end
+    end,
+  })
+
+  if lvim.builtin.treesitter.on_config_done then
+    lvim.builtin.treesitter.on_config_done(ts)
+  end
 end
 
 return M
