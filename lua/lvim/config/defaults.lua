@@ -1,7 +1,7 @@
 return {
   leader = "space",
   reload_config_on_save = true,
-  colorscheme = "lunar",
+  colorscheme = "monokai-pro-light",
   transparent_window = false,
   format_on_save = {
     ---@usage boolean: format on save (Default: false)
@@ -28,7 +28,7 @@ return {
     opts = {
       install = {
         missing = true,
-        colorscheme = { "lunar", "habamax" },
+        colorscheme = { "monokai-pro-light", "habamax" },
       },
       ui = {
         border = "rounded",

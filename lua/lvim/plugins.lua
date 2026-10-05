@@ -40,6 +40,13 @@ local core_plugins = {
     "lunarvim/lunar.nvim",
     lazy = lvim.colorscheme ~= "lunar",
   },
+  {
+    "loctvl842/monokai-pro.nvim",
+    lazy = not vim.startswith(lvim.colorscheme, "monokai-pro"),
+    config = function()
+      require("monokai-pro").setup()
+    end,
+  },
   { "Tastyep/structlog.nvim", lazy = true },
   { "nvim-lua/plenary.nvim", cmd = { "PlenaryBustedFile", "PlenaryBustedDirectory" }, lazy = true },
   -- Telescope

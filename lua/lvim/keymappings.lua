@@ -48,9 +48,11 @@ local defaults = {
   normal_mode = {
     -- Better window movement
     ["<C-h>"] = "<C-w>h",
-    ["<C-j>"] = "<C-w>j",
-    ["<C-k>"] = "<C-w>k",
     ["<C-l>"] = "<C-w>l",
+
+    -- Better buffer navigation
+    ["<C-j>"] = ":bp<CR>",
+    ["<C-k>"] = ":bn<CR>",
 
     -- Resize with arrows
     ["<C-Up>"] = ":resize -2<CR>",
