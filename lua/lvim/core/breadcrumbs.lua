@@ -174,6 +174,11 @@ M.get_winbar = function()
   if excludes() then
     return
   end
+  -- nvim 0.12+ raises E36 (printed, not pcall-able) when a window is too short
+  -- to display a winbar, e.g. in headless mode or tiny splits
+  if #vim.api.nvim_list_uis() == 0 or vim.api.nvim_win_get_height(0) < 2 then
+    return
+  end
   local value = M.get_filename()
 
   local gps_added = false
