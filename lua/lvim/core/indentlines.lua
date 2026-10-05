@@ -28,12 +28,27 @@ M.config = function()
 end
 
 M.setup = function()
-  local status_ok, indent_blankline = pcall(require, "indent_blankline")
+  local status_ok, ibl = pcall(require, "ibl")
   if not status_ok then
     return
   end
 
-  indent_blankline.setup(lvim.builtin.indentlines.options)
+  -- translate legacy (indent-blankline v2) option names to the v3 API
+  local opts = lvim.builtin.indentlines.options or {}
+  ibl.setup {
+    enabled = opts.enabled ~= false,
+    exclude = {
+      buftypes = opts.buftype_exclude,
+      filetypes = opts.filetype_exclude,
+    },
+    indent = {
+      char = opts.char,
+    },
+    scope = {
+      char = opts.context_char or opts.char,
+      enabled = opts.show_current_context ~= false,
+    },
+  }
 
   if lvim.builtin.indentlines.on_config_done then
     lvim.builtin.indentlines.on_config_done()
