@@ -1,9 +1,7 @@
 local M = {}
 
 local Log = require "lvim.core.log"
-local fmt = string.format
 local lvim_lsp_utils = require "lvim.lsp.utils"
-local is_windows = vim.uv.os_uname().version:match "Windows"
 
 ---Resolve the configuration for a server by merging with the default config
 ---@param server_name string

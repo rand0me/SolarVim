@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      HELP_URL: "https://github.com/LunarVim/LunarVim/blob/rolling/CONTRIBUTING.md#commit-messages"
+      HELP_URL: "https://github.com/rand0me/SolarVim/blob/master/CONTRIBUTING.md#commit-messages"
       COMMITLINT_CONFIG: ${{ format('{0}/.github/workflows/commitlint.config.js', github.workspace) }}
       GH_REPO: ${{ github.repository }}
       PR_NUMBER: ${{ github.event.pull_request.number }}

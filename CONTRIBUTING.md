@@ -1,6 +1,6 @@
-# Contributing to LunarVim
+# Contributing to SolarVim
 
-Welcome to the LunarVim contributing guide. We are excited about the prospect of you joining our [community](https://github.com/lunarvim/LunarVim/graphs/contributors)!
+Welcome to the SolarVim contributing guide!
 
 There are many opportunities to contributing to the project at any level. Every contribution is highly valued and no contribution is too small.
 
@@ -10,9 +10,9 @@ One of the best ways to begin contributing in a meaningful way is by helping fin
 
 ## Getting Started
 
-1. Follow the [Installation](https://www.lunarvim.org/docs/installation) guide
-2. Link your fork with the repository `git remote add upstream https://github.com/lunarvim/LunarVim.git`, or use `gh fork`
-3. That's it! You can now `git fetch upstream` and `git rebase [-i] upstream/master` to update your branches with the latest contributions.
+1. Follow the [Installation](https://rand0me.github.io/SolarVim/installation/) guide
+2. Link your checkout with upstream LunarVim `git remote add upstream https://github.com/lunarvim/LunarVim.git`
+3. That's it! You can now `git fetch upstream` and `git rebase [-i] upstream/master` to pull in upstream fixes — SolarVim intentionally stays close to upstream to keep cherry-picks easy.
 
 <br />
 
@@ -110,7 +110,5 @@ ex)
 
 ## Communication
 
-Members of the community have multiple ways to collaborate on the project.
-We encourage you to join the community:
-- [Discord server](https://discord.gg/Xb9B4Ny)
-- [Matrix server](https://matrix.to/#/#atmachine-neovim:matrix.org)
+Open a [GitHub issue](https://github.com/rand0me/SolarVim/issues) for SolarVim bugs and feature requests.
+For general upstream LunarVim questions, the [LunarVim Discord](https://discord.gg/Xb9B4Ny) and [Matrix server](https://matrix.to/#/#atmachine-neovim:matrix.org) are still the best places.

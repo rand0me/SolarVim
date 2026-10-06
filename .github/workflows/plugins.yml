@@ -19,7 +19,7 @@ on:
 
 jobs:
   plugins-version-bump:
-    if: github.repository_owner == 'LunarVim'
+    if: github.repository_owner == 'rand0me'
     runs-on: ubuntu-latest
     continue-on-error: false
     permissions:
@@ -34,7 +34,7 @@ jobs:
           neovim: true
           version: stable
 
-      - name: Install LunarVim
+      - name: Install SolarVim
         timeout-minutes: 4
         run: |
           ./utils/installer/install.sh --local --no-install-dependencies
@@ -42,7 +42,7 @@ jobs:
       - name: run upgrade script
         run: make generate_new_lockfile
 
-      - name: Re-install LunarVim
+      - name: Re-install SolarVim
         timeout-minutes: 4
         run: |
           ./utils/installer/uninstall.sh --remove-backups --remove-config

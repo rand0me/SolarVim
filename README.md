@@ -6,6 +6,8 @@ An actively maintained [Neovim](https://neovim.io) **0.11+** IDE layer with sane
 
 Forked from [LunarVim](https://github.com/LunarVim/LunarVim) and ported to modern Neovim.
 
+**Docs: <https://rand0me.github.io/SolarVim/>**
+
 </div>
 
 ---
@@ -27,7 +29,7 @@ keep diffs small and upstream cherry-picks easy.
 ## Install
 
 ```sh
-bash <(curl -s https://raw.githubusercontent.com/rand0me/SolarVim/main/utils/installer/install.sh)
+bash <(curl -s https://raw.githubusercontent.com/rand0me/SolarVim/master/utils/installer/install.sh)
 ```
 
 Requirements:

@@ -41,7 +41,7 @@ describe("config-loader", function()
   end)
 
   it("should not get interrupted by errors in user-config", function()
-    local test_path = "/tmp/lunarvim"
+    local test_path = "/tmp/solarvim"
     os.execute(string.format([[echo "vim.opt.undodir = '%s'" >> %s]], test_path, user_config_path))
     config:load(user_config_path)
     assert.equal(vim.opt.undodir:get()[1], test_path)

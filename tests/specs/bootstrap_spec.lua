@@ -27,7 +27,7 @@ describe("initial start", function()
     assert.falsy(package.loaded["lvim.impatient"])
   end)
 
-  it("should be able to use lunarvim cache directory using vim.fn", function()
+  it("should be able to use solarvim cache directory using vim.fn", function()
     assert.equal(lvim_cache_path, vim.fn.stdpath "cache")
   end)
 
@@ -36,7 +36,7 @@ describe("initial start", function()
     assert.equal(join_paths(xdg_config, "nvim"), vim.call("stdpath", "config"))
   end)
 
-  it("should be able to read lunarvim directories", function()
+  it("should be able to read solarvim directories", function()
     local rtp_list = vim.opt.rtp:get()
     assert.truthy(vim.tbl_contains(rtp_list, lvim_runtime_path .. "/lvim"))
     assert.truthy(vim.tbl_contains(rtp_list, lvim_config_path))

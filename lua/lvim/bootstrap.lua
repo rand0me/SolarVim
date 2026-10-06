@@ -73,7 +73,7 @@ function M:init(base_dir)
     return vim.call("stdpath", what)
   end
 
-  ---Get the full path to LunarVim's base directory
+  ---Get the full path to SolarVim's base directory
   ---@return string
   function _G.get_lvim_base_dir()
     return base_dir
@@ -109,7 +109,7 @@ end
 ---Update LunarVim
 ---pulls the latest changes from github and, resets the startup cache
 function M:update()
-  require("lvim.core.log"):info "Trying to update LunarVim..."
+  require("lvim.core.log"):info "Trying to update SolarVim..."
 
   vim.schedule(function()
     reload("lvim.utils.hooks").run_pre_update()

@@ -7,7 +7,7 @@ local function deprecate(name, alternative)
     return
   end
 
-  alternative = alternative or "See https://github.com/LunarVim/LunarVim#breaking-changes"
+  alternative = alternative or "See https://rand0me.github.io/SolarVim/migration/"
 
   local trace = debug.getinfo(3, "Sl")
   local shorter_src = trace.short_src
@@ -37,7 +37,10 @@ function M.handle()
   lvim.builtin.notify = {}
   setmetatable(lvim.builtin.notify, {
     __newindex = function(_, k, _)
-      deprecate("lvim.builtin.notify." .. k, "See LunarVim#3294")
+      deprecate(
+        "lvim.builtin.notify." .. k,
+        "See the SolarVim migration guide: https://rand0me.github.io/SolarVim/migration/"
+      )
     end,
   })
 
@@ -45,7 +48,10 @@ function M.handle()
   lvim.builtin.dashboard = {}
   setmetatable(lvim.builtin.dashboard, {
     __newindex = function(_, k, _)
-      deprecate("lvim.builtin.dashboard." .. k, "Use `lvim.builtin.alpha` instead. See LunarVim#1906")
+      deprecate(
+        "lvim.builtin.dashboard." .. k,
+        "Use `lvim.builtin.alpha` instead. See https://rand0me.github.io/SolarVim/migration/"
+      )
     end,
   })
 
@@ -92,7 +98,7 @@ function M.post_load()
   if lvim.autocommands.custom_groups then
     deprecate(
       "lvim.autocommands.custom_groups",
-      "Use vim.api.nvim_create_autocmd instead or check LunarVim#2592 to learn about the new syntax"
+      "Use vim.api.nvim_create_autocmd instead or check the SolarVim migration guide to learn about the new syntax"
     )
   end
 

@@ -45,7 +45,7 @@ conventional_commits = true
 filter_unconventional = true
 # regex for parsing and grouping commits
 commit_preprocessors = [
-    { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "([#${2}](https://github.com/lunarvim/lunarvim/pull/${2}))"},
+    { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "([#${2}](https://github.com/rand0me/SolarVim/pull/${2}))"},
 ]
 commit_parsers = [
     { message = "(.*[bB]ump)", group = "<!-- 7 --> Miscellaneous Tasks", skip = true},

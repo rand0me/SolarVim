@@ -62,7 +62,7 @@ function M.update_base_lvim()
   Log:info "Checking for updates"
 
   if not vim.uv.fs_access(get_lvim_base_dir(), "w") then
-    Log:warn(fmt("Lunarvim update aborted! cannot write to %s", get_lvim_base_dir()))
+    Log:warn(fmt("SolarVim update aborted! cannot write to %s", get_lvim_base_dir()))
     return
   end
 
@@ -74,7 +74,7 @@ function M.update_base_lvim()
 
   ret = git_cmd { args = { "diff", "--quiet", "@{upstream}" } }
   if ret == 0 then
-    Log:info "LunarVim is already up-to-date"
+    Log:info "SolarVim is already up-to-date"
     return
   end
 
@@ -87,7 +87,7 @@ function M.update_base_lvim()
   return true
 end
 
----Switch Lunarvim to the specified development branch
+---Switch SolarVim to the specified development branch
 ---@param branch string
 function M.switch_lvim_branch(branch)
   if not safe_deep_fetch() then
@@ -108,7 +108,7 @@ function M.switch_lvim_branch(branch)
   return true
 end
 
----Get the current Lunarvim development branch
+---Get the current SolarVim development branch
 ---@return string|nil
 function M.get_lvim_branch()
   local _, results = git_cmd { args = { "rev-parse", "--abbrev-ref", "HEAD" } }
@@ -116,7 +116,7 @@ function M.get_lvim_branch()
   return branch
 end
 
----Get currently checked-out tag of Lunarvim
+---Get currently checked-out tag of SolarVim
 ---@return string
 function M.get_lvim_tag()
   local args = { "describe", "--tags", "--abbrev=0" }
@@ -126,7 +126,7 @@ function M.get_lvim_tag()
   return tag
 end
 
----Get the description of currently checked-out commit of Lunarvim
+---Get the description of currently checked-out commit of SolarVim
 ---@return string|nil
 function M.get_lvim_description()
   local _, results = git_cmd { args = { "describe", "--dirty", "--always" } }
@@ -135,7 +135,7 @@ function M.get_lvim_description()
   return description
 end
 
----Get currently running version of Lunarvim
+---Get currently running version of SolarVim
 ---@return string
 function M.get_lvim_version()
   local current_branch = M.get_lvim_branch()

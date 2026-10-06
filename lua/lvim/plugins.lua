@@ -227,7 +227,6 @@ local core_plugins = {
   {
     -- "hoob3rt/lualine.nvim",
     "nvim-lualine/lualine.nvim",
-    -- "Lunarvim/lualine.nvim",
     config = function()
       require("lvim.core.lualine").setup()
     end,

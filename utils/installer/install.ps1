@@ -6,17 +6,17 @@ if ($PSVersionTable.PSVersion -lt 7.1) {
 
 # set script variables
 $LV_BRANCH = $LV_BRANCH ?? "master"
-$LV_REMOTE = $LV_REMOTE ??  "lunarvim/lunarvim.git"
+$LV_REMOTE = $LV_REMOTE ??  "rand0me/SolarVim.git"
 $INSTALL_PREFIX = $INSTALL_PREFIX ?? "$HOME\.local"
 
 $env:XDG_DATA_HOME = $env:XDG_DATA_HOME ?? $env:APPDATA
 $env:XDG_CONFIG_HOME = $env:XDG_CONFIG_HOME ?? $env:LOCALAPPDATA
 $env:XDG_CACHE_HOME = $env:XDG_CACHE_HOME ?? $env:TEMP
 
-$env:LUNARVIM_RUNTIME_DIR = $env:LUNARVIM_RUNTIME_DIR ?? "$env:XDG_DATA_HOME\lunarvim"
-$env:LUNARVIM_CONFIG_DIR = $env:LUNARVIM_CONFIG_DIR ?? "$env:XDG_CONFIG_HOME\lvim"
-$env:LUNARVIM_CACHE_DIR = $env:LUNARVIM_CACHE_DIR ?? "$env:XDG_CACHE_HOME\lvim"
-$env:LUNARVIM_BASE_DIR = $env:LUNARVIM_BASE_DIR ?? "$env:LUNARVIM_RUNTIME_DIR\lvim"
+$env:LUNARVIM_RUNTIME_DIR = $env:LUNARVIM_RUNTIME_DIR ?? "$env:XDG_DATA_HOME\solarvim"
+$env:LUNARVIM_CONFIG_DIR = $env:LUNARVIM_CONFIG_DIR ?? "$env:XDG_CONFIG_HOME\solarvim"
+$env:LUNARVIM_CACHE_DIR = $env:LUNARVIM_CACHE_DIR ?? "$env:XDG_CACHE_HOME\solarvim"
+$env:LUNARVIM_BASE_DIR = $env:LUNARVIM_BASE_DIR ?? "$env:LUNARVIM_RUNTIME_DIR\solarvim"
 
 $__lvim_dirs = (
     $env:LUNARVIM_BASE_DIR,
@@ -42,7 +42,7 @@ function main($cliargs) {
     verify_lvim_dirs
 
     if ($cliargs.Contains("--overwrite")) {
-        Write-Output "!!Warning!! -> Removing all lunarvim related config because of the --overwrite flag"
+        Write-Output "!!Warning!! -> Removing all solarvim related config because of the --overwrite flag"
         $answer = Read-Host "Would you like to continue? [y]es or [n]o "
         if ("$answer" -ne "y" -and "$answer" -ne "Y") {
             exit 1
@@ -50,7 +50,7 @@ function main($cliargs) {
         uninstall_lvim
     }
     if ($cliargs.Contains("--local") -or $cliargs.Contains("--testing")) {
-        msg "Using local LunarVim installation"
+        msg "Using local SolarVim installation"
         local_install
         exit
     }
@@ -58,23 +58,23 @@ function main($cliargs) {
     msg "Checking dependencies.."
     check_system_deps
 
-    $answer = Read-Host "Would you like to check lunarvim's NodeJS dependencies? [y]es or [n]o (default: no) "
+    $answer = Read-Host "Would you like to check SolarVim's NodeJS dependencies? [y]es or [n]o (default: no) "
     if ("$answer" -eq "y" -or "$answer" -eq "Y") {
         install_nodejs_deps
     }
 
-    $answer = Read-Host "Would you like to check lunarvim's Python dependencies? [y]es or [n]o (default: no) "
+    $answer = Read-Host "Would you like to check SolarVim's Python dependencies? [y]es or [n]o (default: no) "
     if ("$answer" -eq "y" -or "$answer" -eq "Y") {
         install_python_deps
     }
 
 
     if (Test-Path "$env:LUNARVIM_BASE_DIR\init.lua" ) {
-        msg "Updating LunarVim"
+        msg "Updating SolarVim"
         validate_lunarvim_files
     }
     else {
-        msg "Cloning Lunarvim"
+        msg "Cloning SolarVim"
         clone_lvim
         setup_lvim
     }
@@ -192,7 +192,7 @@ function setup_shim() {
         New-Item "$INSTALL_PREFIX\bin" -ItemType Directory | Out-Null
     }
 
-    Copy-Item -Force "$env:LUNARVIM_BASE_DIR\utils\bin\lvim.ps1" "$INSTALL_PREFIX\bin\lvim.ps1"
+    Copy-Item -Force "$env:LUNARVIM_BASE_DIR\utils\bin\solarvim.ps1" "$INSTALL_PREFIX\bin\solarvim.ps1"
 }
 
 function uninstall_lvim() {
@@ -214,7 +214,7 @@ function verify_lvim_dirs() {
 
 
 function setup_lvim() {
-    msg "Installing LunarVim shim"
+    msg "Installing SolarVim shim"
     setup_shim
 
     msg "Installing sample configuration"
@@ -232,31 +232,31 @@ function setup_lvim() {
 
     create_alias
 
-    msg "Thank you for installing LunarVim!!"
+    msg "Thank you for installing SolarVim!!"
 
-    Write-Output "You can start it by running: $INSTALL_PREFIX\bin\lvim.ps1"
+    Write-Output "You can start it by running: $INSTALL_PREFIX\bin\solarvim.ps1"
     Write-Output "Do not forget to use a font with glyphs (icons) support [https://github.com/ryanoasis/nerd-fonts]"
 }
 
 
 function validate_lunarvim_files() {
-    Set-Alias lvim "$INSTALL_PREFIX\bin\lvim.ps1"
+    Set-Alias solarvim "$INSTALL_PREFIX\bin\solarvim.ps1"
     try {
         $verify_version_cmd="if !empty(v:errmsg) | cquit | else | quit | endif"
-        Invoke-Command -ScriptBlock { lvim --headless -c 'LvimUpdate' -c "$verify_version_cmd" } -ErrorAction SilentlyContinue
+        Invoke-Command -ScriptBlock { solarvim --headless -c 'LvimUpdate' -c "$verify_version_cmd" } -ErrorAction SilentlyContinue
     }
     catch {
         Write-Output "Unable to guarantee data integrity while updating. Please run `:LvimUpdate` manually instead."
         exit 1
     }
-    Write-Output "Your LunarVim installation is now up to date!"
+    Write-Output "Your SolarVim installation is now up to date!"
 }
 
 function create_alias {
     try {
         $answer = Read-Host $(`
                 "Would you like to create an alias inside your Powershell profile?`n" + `
-                "(This enables you to start lvim with the command 'lvim') [y]es or [n]o (default: no)" )
+                "(This enables you to start solarvim with the command 'solarvim') [y]es or [n]o (default: no)" )
     }
     catch {
         msg "Non-interactive mode detected. Skipping alias creation"
@@ -267,10 +267,10 @@ function create_alias {
         return
     }
 
-    $lvim_bin="$INSTALL_PREFIX\bin\lvim.ps1"
-    $lvim_alias = Get-Alias lvim -ErrorAction SilentlyContinue
+    $solarvim_bin="$INSTALL_PREFIX\bin\solarvim.ps1"
+    $solarvim_alias = Get-Alias solarvim -ErrorAction SilentlyContinue
 
-    if ($lvim_alias.Definition -eq $lvim_bin) {
+    if ($solarvim_alias.Definition -eq $solarvim_bin) {
         Write-Output "Alias is already set and will not be reset."
         return
     }
@@ -282,24 +282,22 @@ function create_alias {
         New-Item -Path $PROFILE -ItemType "file" -Force
     }
 
-    Add-Content -Path $PROFILE -Value $("`r`nSet-Alias lvim '$lvim_bin'")
+    Add-Content -Path $PROFILE -Value $("`r`nSet-Alias solarvim '$solarvim_bin'")
 
     Write-Host 'To use the new alias in this window reload your profile with: `. $PROFILE`' -ForegroundColor Green
 }
 
 function print_logo(){
-    Write-Output "
+    Write-Output @'
 
-		88\                                                   88\               
-		88 |                                                  \__|              
-		88 |88\   88\ 888888$\   888888\   888888\ 88\    88\ 88\ 888888\8888\  
-		88 |88 |  88 |88  __88\  \____88\ 88  __88\\88\  88  |88 |88  _88  _88\ 
-		88 |88 |  88 |88 |  88 | 888888$ |88 |  \__|\88\88  / 88 |88 / 88 / 88 |
-		88 |88 |  88 |88 |  88 |88  __88 |88 |       \88$  /  88 |88 | 88 | 88 |
-		88 |\888888  |88 |  88 |\888888$ |88 |        \$  /   88 |88 | 88 | 88 |
-		\__| \______/ \__|  \__| \_______|\__|         \_/    \__|\__| \__| \__|
+███████╗ ██████╗ ██╗      █████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
+██╔════╝██╔═══██╗██║     ██╔══██╗██╔══██╗██║   ██║██║████╗ ████║
+███████╗██║   ██║██║     ███████║██████╔╝██║   ██║██║██╔████╔██║
+╚════██║██║   ██║██║     ██╔══██║██╔══██╗╚██╗ ██╔╝██║██║╚██╔╝██║
+███████║╚██████╔╝███████╗██║  ██║██║  ██║ ╚████╔╝ ██║██║ ╚═╝ ██║
+╚══════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝  ╚═╝╚═╝     ╚═╝
 
-  "
+'@
 }
 
 main "$args"
