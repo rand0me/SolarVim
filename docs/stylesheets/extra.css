@@ -1,0 +1,117 @@
+/* SolarVim — deep-indigo night, solar gold accent.
+   Display type is JetBrains Mono (the product lives in a terminal);
+   body copy is IBM Plex Sans. One bold element: the startup-screen
+   terminal mock on the landing page. Everything else stays quiet. */
+
+:root {
+  --solar-night: #0d1224;
+  --solar-night-raised: #141a30;
+  --solar-gold: #ffb627;
+  --solar-gold-soft: #ffc95e;
+  --solar-line: #232c4d;
+}
+
+:root > * {
+  --md-primary-fg-color: var(--solar-night);
+  --md-default-bg-color: var(--solar-night);
+  --md-accent-fg-color: var(--solar-gold);
+  --md-typeset-a-color: var(--solar-gold-soft);
+  --md-code-bg-color: var(--solar-night-raised);
+  --md-footer-bg-color: var(--solar-night-raised);
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: -0.01em;
+}
+
+.md-typeset a:focus-visible,
+.md-typeset .md-button:focus-visible {
+  outline: 2px solid var(--solar-gold);
+  outline-offset: 2px;
+}
+
+/* Landing hero */
+
+.solar-hero {
+  padding: 2.2rem 0 1.4rem;
+}
+
+.solar-hero h1 {
+  /* the hero copy carries the visible message; keep the h1 for the a11y tree */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.solar-hero .solar-lede {
+  font-size: 1.15em;
+  color: #c9d1ee;
+  margin: 0.3em 0 1.4em;
+  max-width: 34em;
+}
+
+.solar-hero .solar-install {
+  font-size: 1.05em;
+  max-width: 46em;
+}
+
+.solar-hero .solar-install pre {
+  border: 1px solid var(--solar-line);
+}
+
+/* Terminal mock: the actual SolarVim startup screen */
+
+.solar-term {
+  background: #080c18;
+  border: 1px solid var(--solar-line);
+  border-radius: 6px;
+  margin: 1.2em 0;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+.solar-term-bar {
+  display: block;
+  padding: 0.45em 0.9em;
+  border-bottom: 1px solid var(--solar-line);
+  color: #7d88b8;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72em;
+}
+
+.solar-term pre {
+  margin: 0;
+  padding: 1em 1.1em;
+  background: transparent;
+  color: #dfe4f7;
+  font-size: 0.62em;
+  line-height: 1.35;
+  overflow-x: auto;
+}
+
+.solar-term .solar-dim { color: #7d88b8; }
+.solar-term .solar-gold { color: var(--solar-gold); }
+
+/* Requirements strip */
+
+.solar-reqs {
+  border-top: 1px solid var(--solar-line);
+  border-bottom: 1px solid var(--solar-line);
+  padding: 0.8em 0;
+  margin: 1.6em 0;
+  color: #9aa4cc;
+  font-size: 0.85em;
+}
+
+@media (max-width: 600px) {
+  .solar-term pre { font-size: 0.5em; }
+}

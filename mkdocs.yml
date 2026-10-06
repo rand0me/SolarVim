@@ -1,0 +1,50 @@
+site_name: SolarVim
+site_description: An actively maintained Neovim 0.11+ IDE layer with sane defaults. Forked from LunarVim.
+site_url: https://rand0me.github.io/SolarVim/
+repo_url: https://github.com/rand0me/SolarVim
+repo_name: rand0me/SolarVim
+edit_uri: edit/master/docs/
+
+copyright: © 2026 SolarVim contributors · MIT — SolarVim is a fork of LunarVim.
+
+theme:
+  name: material
+  logo: assets/logo.svg
+  favicon: assets/logo.svg
+  palette:
+    scheme: slate
+  font:
+    text: IBM Plex Sans
+    code: JetBrains Mono
+  features:
+    - content.code.copy
+    - navigation.sections
+    - navigation.top
+    - toc.follow
+  icon:
+    repo: fontawesome/brands/github
+
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Configuration: configuration.md
+  - Migrating from LunarVim: migration.md
+  - Troubleshooting: troubleshooting.md
+  - Development: development.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.details
+
+extra_css:
+  - stylesheets/extra.css
